@@ -31,7 +31,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)queue.h	8.5 (Berkeley) 8/20/94
- * $Id: queue.h,v 1.1 1999/07/12 00:36:30 shigio Exp $
+ * $Id: queue.h,v 1.1.1.1 1999/07/12 00:36:30 shigio Exp $
  */
 
 #ifndef _SYS_QUEUE_H_
