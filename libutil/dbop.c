@@ -216,7 +216,12 @@ start_sort_process(DBOP *dbop) {
 		 * by internationalized sort command. 	 
 		 */
 		set_env("LC_ALL", "C");
-		execvp(POSIX_SORT, argv);
+		char *posix_sort = getenv("GTAGS_POSIX_SORT");
+		if (posix_sort == 0)
+		{
+			posix_sort = POSIX_SORT;
+		}
+		execvp(posix_sort, argv);
 	} else if (dbop->pid < 0)
 		die("fork failed.");
 	/* parent process */
