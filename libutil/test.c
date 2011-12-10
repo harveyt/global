@@ -127,7 +127,7 @@ test(const char *flags, const char *path)
 				return 0;
 			break;
 		case 'x':
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(__CYGWIN__)
 			/* Look at file extension to determine executability */
 			if (strlen(path) < 5)
 				return 0;
