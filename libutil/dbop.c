@@ -181,9 +181,15 @@ static void
 start_sort_process(DBOP *dbop) {
 	int opipe[2], ipipe[2];
 
-	if (!strcmp(POSIX_SORT, "no"))
+	char *posix_sort = getenv("GTAGSPOSIXSORT");
+	if (posix_sort == 0)
+	{
+		posix_sort = POSIX_SORT;
+	}
+
+	if (!strcmp(posix_sort, "no"))
 		return;
-	if (!test("fx", POSIX_SORT)) {
+	if (!test("fx", posix_sort)) {
 		static int informed;
 
 		if (!informed) {
@@ -216,11 +222,6 @@ start_sort_process(DBOP *dbop) {
 		 * by internationalized sort command. 	 
 		 */
 		set_env("LC_ALL", "C");
-		char *posix_sort = getenv("GTAGS_POSIX_SORT");
-		if (posix_sort == 0)
-		{
-			posix_sort = POSIX_SORT;
-		}
 		execvp(posix_sort, argv);
 	} else if (dbop->pid < 0)
 		die("fork failed.");
