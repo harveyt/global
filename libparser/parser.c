@@ -213,6 +213,7 @@ static const struct lang_entry lang_switch[] = {
 	{"yacc",	yacc,		"yacc",		"builtin"},
 	{"cpp",		Cpp,		"Cpp",		"builtin"},
 	{"java",	java,		"java",		"builtin"},
+	{"csharp",	csharp,		"csharp",	"builtin"},
 	{"php",		php,		"php",		"builtin"},
 	{"asm",		assembly,	"assembly",	"builtin"}
 };

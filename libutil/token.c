@@ -42,6 +42,7 @@ const char *sp, *cp, *lp;
 int crflag;			/* 1: return '\n', 0: doesn't return */
 int cmode;			/* allow token which start with '#' */
 int cppmode;			/* allow '::' as a token */
+int csharpmode;			/* allow @"..." string literals */
 int ymode;			/* allow token which start with '%' */
 char token[MAXTOKEN];
 char curfile[MAXPATHLEN];
@@ -69,7 +70,7 @@ opentoken(const char *file)
 	ib = strbuf_open(MAXBUFLEN);
 	strlimcpy(curfile, file, sizeof(curfile));
 	sp = cp = lp = NULL; ptok[0] = '\0'; lineno = 0;
-	crflag = cmode = cppmode = ymode = 0;
+	crflag = cmode = cppmode = csharpmode = ymode = 0;
 	continued_line = 0;
 	return 1;
 }
@@ -111,6 +112,7 @@ nexttoken(const char *interested, int (*reserved)(const char *, int))
 	char *p;
 	int sharp = 0;
 	int percent = 0;
+	int csharpqstr = 0;
 
 	/* check push back buffer */
 	if (ptok[0]) {
@@ -134,6 +136,16 @@ nexttoken(const char *interested, int (*reserved)(const char *, int))
 			int quote = c;
 
 			while ((c = nextchar()) != EOF) {
+				if (csharpqstr) {
+					if (c == '\"') {
+						if (peekc(1) == '\"') {
+							c = nextchar();
+							continue;
+						}
+						break;
+					}
+					continue;
+				}
 				if (c == quote)
 					break;
 				if (quote == '\'' && c == '\n')
@@ -141,6 +153,7 @@ nexttoken(const char *interested, int (*reserved)(const char *, int))
 				if (c == '\\' && (c = nextchar()) == EOF)
 					break;
 			}
+			csharpqstr = 0;
 		} else if (c == '/') {			/* comment */
 			if ((c = nextchar()) == '/') {
 				while ((c = nextchar()) != EOF)
@@ -187,6 +200,9 @@ nexttoken(const char *interested, int (*reserved)(const char *, int))
 				if (reserved && (c = (*reserved)(token, tlen)) == 0)
 					break;
 			}
+		} else if (c == '@' && csharpmode) {
+			if (peekc(1) == '"')
+				csharpqstr = 1;
 		} else if (c == '%' && ymode) {
 			/* recognize '%%' as a token if it is reserved word. */
 			if (atfirst) {

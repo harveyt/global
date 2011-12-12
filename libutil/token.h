@@ -31,6 +31,7 @@ extern int lineno;
 extern int crflag;
 extern int cmode;
 extern int cppmode;
+extern int csharpmode;
 extern int ymode;
 extern char token[MAXTOKEN];
 extern char curfile[MAXPATHLEN];

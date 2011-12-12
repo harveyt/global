@@ -44,6 +44,7 @@ void C(const struct parser_param *);
 void yacc(const struct parser_param *);
 void Cpp(const struct parser_param *);
 void java(const struct parser_param *);
+void csharp(const struct parser_param *);
 void php(const struct parser_param *);
 void assembly(const struct parser_param *);
 
